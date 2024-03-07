@@ -1,4 +1,4 @@
-# Welcome to your shakewell coding challenge :wave:
+# Welcome to the Shakewell JS coding challenge :wave:
 
 This project was originally bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
