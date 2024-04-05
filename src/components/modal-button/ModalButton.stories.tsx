@@ -1,18 +1,18 @@
 import { Meta, StoryFn } from "@storybook/react";
 
-import SettingsSelector from "./SettingsSelector";
+import ModalButton, { IModalButtonProps } from "./ModalButton";
 
 // Settings
 export default {
-  title: "Modal/SettingsSelector",
-  component: SettingsSelector,
+  title: "Button/ModalButton",
+  component: ModalButton,
   parameters: {
     layout: "centered",
   },
 } as Meta;
 
 // Main Story
-const Template: StoryFn = (args) => <SettingsSelector {...args} />;
+const Template: StoryFn<IModalButtonProps> = (args) => <ModalButton {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {};

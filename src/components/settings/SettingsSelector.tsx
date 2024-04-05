@@ -1,8 +1,11 @@
-import React, { useRef } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import Modal from "react-modal";
-import CountrySelect, { DEFAULT_COUNTRY } from "../country/CountrySelect";
-import LanguageSelect, { DEFAULT_LANGUAGE } from "../language/LanguageSelect";
-import CurrencySelect, { DEFAULT_CURRENCY } from "../currency/CurrencySelect";
+import { DEFAULT_COUNTRY, DEFAULT_CURRENCY, DEFAULT_LANGUAGE } from "../../constants/defaultValues";
+import CountrySelect from "../country/CountrySelect";
+import { IValue } from "../country/countryInterfaces";
+import CurrencySelect from "../currency/CurrencySelect";
+import LanguageSelect from "../language/LanguageSelect";
+import ModalButton from "../modal-button/ModalButton";
 
 /* --- [TASK] ---
 Changes on modal are only applied on SAVE
@@ -96,58 +99,86 @@ FURTHER DETAILS
 // Component
 const SettingsSelector = (): JSX.Element => {
   // States
-  const [modalIsOpen, setModalIsOpen] = React.useState<any>(false);
-  const [selectedCountry, setCountry] = React.useState<any>(DEFAULT_COUNTRY);
-  const [selectedCurrency, setCurrency] = React.useState<any>(DEFAULT_CURRENCY);
-  const [selectedLanguage, setLanguage] = React.useState<any>(DEFAULT_LANGUAGE);
+  const [modalIsOpen, setModalIsOpen] = React.useState<boolean>(false);
+  const [selected, setSelected] = React.useState<{
+    country: IValue,
+    currency: string,
+    language: string,
+  }>({
+    country: DEFAULT_COUNTRY,
+    currency: DEFAULT_CURRENCY,
+    language: DEFAULT_LANGUAGE
+  })
 
-  // Render Counter
-  const counter = useRef(0);
+  // Render ref for component values
+  const countryRef = useRef(selected.country)
+  const currencyRef = useRef(selected.currency)
+  const languageRef = useRef(selected.language)
 
-  // Actions
-  const handleOpen = () => {
-    setModalIsOpen(true);
-  };
-  const handleClose = () => {
+  // Modal Actions
+  // Memoized this function as function gets created over and over when passed to components
+  const handleOpen = useCallback(() => {
+    setModalIsOpen(true)
+  }, [])
+  const handleClose = useCallback(() => {
     setModalIsOpen(false);
-  };
+  }, []);
 
-  const button = () => {
-    // Increase render count.
-    counter.current++;
+  // Button Actions
+  const handleSave = useCallback(() => {
+    setSelected({ currency: currencyRef.current, language: languageRef.current, country: countryRef.current })
+    handleClose()
+  }, [handleClose])
 
-    // Log current render count.
-    console.log("Render count of button is: " + counter.current);
+  // Component Actions
+  const handleCountryChange = (newCountry: IValue) => {
+    countryRef.current = newCountry
+  }
+  const handleCurrencyChange = (newCurrency: string) => {
+    currencyRef.current = newCurrency
+  }
+  const handleLanguageChange = (newLanguage: string) => {
+    languageRef.current = newLanguage
+  }
 
-    /* Button */
-    return (
-      <button onClick={handleOpen}>
-        {selectedCountry.name} - ({selectedCurrency} - {selectedLanguage})
-      </button>
-    );
-  };
+  // Memoized the states to lessen re-renders
+  const buttonValue = useMemo(() => ({
+    country: selected.country.name,
+    currency: selected.currency,
+    language: selected.language
+  }), [selected.country.name, selected.currency, selected.language])
 
   // Render
   return (
     <div>
-      {button()}
+      <ModalButton onClickButton={handleOpen} {...buttonValue} />
 
       {/* Modal */}
-      <Modal isOpen={modalIsOpen}>
+      <Modal className="settings-modal" overlayClassName="overlay-settings-modal" isOpen={modalIsOpen}>
         {/* Header */}
         <h2>Select your region, currency and language.</h2>
 
-        {/* Country */}
-        <CountrySelect value={selectedCountry} onChange={setCountry} />
+        <div className="form-fields">
+          {/* Country */}
+          <CountrySelect value={selected.country} onChange={handleCountryChange} />
 
-        {/* Currency */}
-        <CurrencySelect value={selectedCurrency} onChange={setCurrency} />
+          {/* Currency */}
+          <CurrencySelect value={selected.currency} onChange={handleCurrencyChange} />
 
-        {/* Language */}
-        <LanguageSelect language={selectedLanguage} onChange={setLanguage} />
+          {/* Language */}
+          <LanguageSelect language={selected.language} onChange={handleLanguageChange} />
+        </div>
 
-        {/* Close button */}
-        <button onClick={handleClose}>Close</button>
+        <div className="button-wrapper">
+          {/* Close button */}
+          <button className="close" onClick={handleClose}>Close</button>
+
+          {/* Cancel button */}
+          <button className="cancel" onClick={handleClose}>Cancel</button>
+
+          {/* Save */}
+          <button className="save" onClick={handleSave}>Save</button>
+        </div>
       </Modal>
     </div>
   );

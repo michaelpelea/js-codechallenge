@@ -1,0 +1,74 @@
+.country-select-option > div, .country-select-input > div {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.country-select-option img, .country-select-input img {
+  width: 2rem;
+}
+
+.settings-modal {
+  margin: 0px auto;
+  padding: 2rem;
+  background-color: lightsteelblue;
+  max-width: 998px;
+  width: 100%;
+  border-radius: 1rem;
+}
+
+.settings-modal h2 {
+  margin: 0px;
+}
+
+.settings-modal .form-fields {
+  padding: 1rem 0;
+}
+
+/* Targets the field under label */
+.settings-modal .form-fields > div > label > div {
+  padding-top: 0.5rem;
+}
+
+.settings-modal .form-fields > div {
+  margin-bottom: 1rem;
+}
+
+.settings-modal .button-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.settings-modal .button-wrapper > button {
+  padding: 0.5rem 1.5rem;
+  border-radius: 2rem;
+  border: 1px #00000099 solid;
+  background-color: white;
+  cursor: pointer;
+}
+
+.settings-modal .button-wrapper > button:hover {
+  background-color: aliceblue;
+}
+
+.overlay-settings-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 2rem;
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media screen and (max-width: 1024px) {
+  .settings-modal {
+    width: auto;
+    padding: 1rem;
+  }
+}

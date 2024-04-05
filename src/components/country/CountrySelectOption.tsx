@@ -1,4 +1,5 @@
 import { OptionProps, components } from "react-select";
+import { ISelectOption } from "./countryInterfaces";
 
 /* --- [TASK] ---
 Country flags in select field
@@ -20,10 +21,13 @@ FURTHER DETAILS
 --- [TASK] --- */
 
 // Component
-export const CountrySelectOption = (props: OptionProps<any>) => {
+export const CountrySelectOption = (props: OptionProps<ISelectOption>) => {
   return (
-    <div>
-      <components.Option {...props} />
+    <div className="country-select-option">
+      <components.Option {...props}>
+        <img src={props.data.value.icon} alt={props.data.label} />
+        {props.data.label}
+        </components.Option>
     </div>
   );
 };

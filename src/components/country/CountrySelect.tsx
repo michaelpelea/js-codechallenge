@@ -1,6 +1,10 @@
 import countries from "i18n-iso-countries";
 import Select from "react-select";
+import { DEFAULT_COUNTRY } from "../../constants/defaultValues";
+import { getCountryIcon } from "../libs/utils";
+import { CountrySelectInput } from "./CountrySelectInput";
 import { CountrySelectOption } from "./CountrySelectOption";
+import { ISelectOption, IValue } from "./countryInterfaces";
 
 // Register countries
 countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
@@ -8,17 +12,12 @@ countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
 // --- TASK G ---
 // Please replace "any" with a proper type in this file (and where it is needed).
 
+
 // Props
-interface CountrySelectProps {
-  value?: any;
+export interface CountrySelectProps {
+  value?: IValue;
   onChange?: (value: any) => void;
 }
-
-// Constants
-export const DEFAULT_COUNTRY = {
-  code: "US",
-  name: "United States of America",
-};
 
 // Component
 export const CountrySelect = ({
@@ -30,11 +29,12 @@ export const CountrySelect = ({
     countries.getNames("en", { select: "official" })
   ).map(([code, name]) => {
     return {
-      value: { code, name },
+      value: { code, name, icon: getCountryIcon(code) },
       label: name,
     };
   });
-  const defaultValue = { value: value, label: value.name };
+  
+  const defaultValue: ISelectOption = { value: value, label: value.name };
 
   // Render
   return (
@@ -43,10 +43,11 @@ export const CountrySelect = ({
         Country
         <Select
           options={data}
-          components={{ Option: CountrySelectOption }}
+          isMulti={false}
+          components={{ Option: CountrySelectOption, ValueContainer: CountrySelectInput }}
           defaultValue={defaultValue}
           onChange={(newValue) => {
-            onChange(newValue.value);
+            onChange?.(newValue?.value ?? '');
           }}
         />
       </label>

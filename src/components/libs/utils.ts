@@ -1,0 +1,1 @@
+export const getCountryIcon = (code: string) => `https://catamphetamine.gitlab.io/country-flag-icons/3x2/${code.toUpperCase()}.svg`
